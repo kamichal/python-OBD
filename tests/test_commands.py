@@ -8,7 +8,8 @@ def test_list_integrity():
         for pid, cmd in enumerate(cmds):
 
             if cmd is None:
-                continue # this command is reserved
+                # this command is reserved
+                continue
 
             assert cmd.command != b"",         "The Command's command string must not be null"
 
@@ -40,7 +41,8 @@ def test_unique_names():
         for cmd in cmds:
 
             if cmd is None:
-                continue # this command is reserved
+                # this command is reserved
+                continue
 
             assert not names.__contains__(cmd.name), "Two commands share the same name: %s" % cmd.name
             names[cmd.name] = True
@@ -52,7 +54,8 @@ def test_getitem():
         for cmd in cmds:
 
             if cmd is None:
-                continue # this command is reserved
+                # this command is reserved
+                continue
 
             # by [mode][pid]
             if (cmd.pid is None) and (len(cmds) == 1):
@@ -72,7 +75,8 @@ def test_contains():
         for cmd in cmds:
 
             if cmd is None:
-                continue # this command is reserved
+                # this command is reserved
+                continue
 
             # by (command)
             assert obd.commands.has_command(cmd)
@@ -105,7 +109,8 @@ def test_pid_getters():
         for cmd in mode:
 
             if cmd is None:
-                continue # this command is reserved
+                # this command is reserved
+                continue
 
             if cmd.decode == pid:
                 assert cmd in pid_getters
