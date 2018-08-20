@@ -30,6 +30,8 @@
 #                                                                      #
 ########################################################################
 
+# flake8: noqa
+
 from .protocol import ECU
 
 from .protocol_unknown import UnknownProtocol

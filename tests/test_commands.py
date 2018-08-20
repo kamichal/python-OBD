@@ -1,6 +1,5 @@
 
 import obd
-from obd.decoders import pid
 
 
 def test_list_integrity():
@@ -61,12 +60,15 @@ def test_getitem():
             if (cmd.pid is None) and (len(cmds) == 1):
                 # lone commands in a mode have no PID, and report a pid
                 # value of None, but can still be accessed by PID 0
-                assert cmd == obd.commands[cmd.mode][0], "lone command in mode %d could not be accessed through __getitem__" % mode
+                msg = "lone command in mode %d could not be accessed through __getitem__" % cmd.mode
+                assert cmd == obd.commands[cmd.mode][0], msg
             else:
-                assert cmd == obd.commands[cmd.mode][cmd.pid], "mode %d, PID %d could not be accessed through __getitem__" % (mode, pid)
+                msg = "mode %d, PID %d could not be accessed through __getitem__" % (cmd.mode, cmd.pid)
+                assert cmd == obd.commands[cmd.mode][cmd.pid], msg
 
             # by [name]
-            assert cmd == obd.commands[cmd.name], "command name %s could not be accessed through __getitem__" % (cmd.name)
+            msg = "command name %s could not be accessed through __getitem__" % cmd.name
+            assert cmd == obd.commands[cmd.name], msg
 
 
 def test_contains():
@@ -112,5 +114,7 @@ def test_pid_getters():
                 # this command is reserved
                 continue
 
-            if cmd.decode == pid:
+            if cmd.decode == obd.decoders.pid:
                 assert cmd in pid_getters
+            else:
+                assert cmd not in pid_getters

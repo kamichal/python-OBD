@@ -43,6 +43,7 @@ from .protocols import ECU
 
 logger = logging.getLogger(__name__)
 
+# flake8: noqa
 
 '''
     Define command tables

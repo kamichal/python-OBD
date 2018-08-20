@@ -37,6 +37,8 @@
 #                                                                      #
 ########################################################################
 
+# flake8: noqa
+
 import logging
 
 from .OBDCommand import OBDCommand
