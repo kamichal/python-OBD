@@ -31,6 +31,7 @@
 ########################################################################
 
 from binascii import hexlify
+from collections import defaultdict
 from obd.utils import isHex, bitarray
 
 import logging
@@ -196,20 +197,17 @@ class Protocol(object):
 
         # group frames by transmitting ECU
         # frames_by_ECU[tx_id] = [Frame, Frame]
-        frames_by_ECU = {}
+        frames_by_ECU = defaultdict(list)
         for frame in frames:
-            if frame.tx_id not in frames_by_ECU:
-                frames_by_ECU[frame.tx_id] = [frame]
-            else:
-                frames_by_ECU[frame.tx_id].append(frame)
+            frames_by_ECU[frame.tx_id].append(frame)
 
         # parse frames into whole messages
         messages = []
-        for ecu in frames_by_ECU:
+        for ecu, ecu_frames in sorted(frames_by_ECU.items()):
 
             # new message object with a copy of the raw data
             # and frames addressed for this ecu
-            message = Message(frames_by_ECU[ecu])
+            message = Message(ecu_frames)
 
             # subclass function to assemble frames into Messages
             if self.parse_message(message):
