@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-	A serial module for accessing data from a vehicles OBD-II port
+    A serial module for accessing data from a vehicles OBD-II port
 
-	For more documentation, visit:
-	http://python-obd.readthedocs.org/en/latest/
+    For more documentation, visit:
+    http://python-obd.readthedocs.org/en/latest/
 """
 
 ########################################################################
@@ -37,21 +37,22 @@
 #                                                                      #
 ########################################################################
 
-from .__version__ import __version__
-from .obd import OBD
-from .async import Async
-from .commands import commands
+import logging
+
 from .OBDCommand import OBDCommand
 from .OBDResponse import OBDResponse
+from .UnitsAndScaling import Unit
+from .__version__ import __version__
+from .async_obd import Async
+from .commands import commands
+from .obd import OBD
 from .protocols import ECU
 from .utils import scan_serial, OBDStatus
-from .UnitsAndScaling import Unit
 
-import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
-console_handler = logging.StreamHandler() # sends output to stderr
+console_handler = logging.StreamHandler()  # sends output to stderr
 console_handler.setFormatter(logging.Formatter("[%(name)s] %(message)s"))
 logger.addHandler(console_handler)

@@ -31,7 +31,7 @@
 ########################################################################
 
 
-from .protocol import *
+from .protocol import Protocol
 
 
 class UnknownProtocol(Protocol):
@@ -43,8 +43,10 @@ class UnknownProtocol(Protocol):
         been made, but the car hasn't responded.
     """
 
-    def parse_frame(self, frame):
-        return True # pass everything
+    def parse_frame(self, _):
+        " pass everything "
+        return True
 
-    def parse_message(self, message):
-        return True # pass everything
+    def parse_message(self, _):
+        " pass everything "
+        return True

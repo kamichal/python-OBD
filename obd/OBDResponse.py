@@ -31,40 +31,40 @@
 ########################################################################
 
 
-import time
-from .codes import *
-
 import logging
+import time
+
+from .UnitsAndScaling import Unit
+from .codes import BASE_TESTS, SPARK_TESTS, COMPRESSION_TESTS, TEST_IDS
+
 
 logger = logging.getLogger(__name__)
-
 
 
 class OBDResponse():
     """ Standard response object for any OBDCommand """
 
     def __init__(self, command=None, messages=None):
-        self.command  = command
+        self.command = command
         self.messages = messages if messages else []
-        self.value    = None
-        self.time     = time.time()
+        self.value = None
+        self.time = time.time()
 
     @property
     def unit(self):
         # for backwards compatibility
         if isinstance(self.value, Unit.Quantity):
             return str(self.value.u)
-        elif self.value == None:
+        elif self.value is None:
             return None
         else:
             return str(type(self.value))
 
     def is_null(self):
-        return (not self.messages) or (self.value == None)
+        return not self.messages or self.value is None
 
     def __str__(self):
         return str(self.value)
-
 
 
 """
@@ -75,8 +75,8 @@ class OBDResponse():
 
 class Status():
     def __init__(self):
-        self.MIL           = False
-        self.DTC_count     = 0
+        self.MIL = False
+        self.DTC_count = 0
         self.ignition_type = ""
 
         # make sure each test is available by name
@@ -84,7 +84,7 @@ class Status():
         # breaking when the user looks up a standard test that's null.
         null_test = StatusTest()
         for name in BASE_TESTS + SPARK_TESTS + COMPRESSION_TESTS:
-            if name: # filter out None/reserved tests
+            if name:  # filter out None/reserved tests
                 self.__dict__[name] = null_test
 
 
@@ -102,7 +102,7 @@ class StatusTest():
 
 class Monitor():
     def __init__(self):
-        self._tests = {} # tid : MonitorTest
+        self._tests = {}  # tid : MonitorTest
 
         # make the standard TIDs available as null monitor tests
         # until real data comes it. This also prevents things from
@@ -125,7 +125,7 @@ class Monitor():
 
     def __str__(self):
         if len(self.tests) > 0:
-            return "\n".join([ str(t) for t in self.tests ])
+            return "\n".join([str(t) for t in self.tests])
         else:
             return "No tests to report"
 
@@ -139,7 +139,6 @@ class Monitor():
             return self.__dict__.get(key, MonitorTest())
         else:
             logger.warning("Monitor test results can only be retrieved by TID value or property name")
-
 
 
 class MonitorTest():
@@ -165,6 +164,4 @@ class MonitorTest():
                 self.max is None)
 
     def __str__(self):
-        return "%s : %s [%s]" % (self.desc,
-                                 str(self.value),
-                                 "PASSED" if self.passed else "FAILED")
+        return "%s : %s [%s]" % (self.desc, str(self.value), "PASSED" if self.passed else "FAILED")

@@ -30,18 +30,22 @@
 #                                                                      #
 ########################################################################
 
-from .protocols import ECU
-from .OBDCommand import OBDCommand
-from .decoders import *
-
 import logging
+
+from .decoders import pid, status, single_dtc, fuel_status, percent, temp, percent_centered, fuel_pressure, pressure,\
+    uas, timing_advance, air_status, o2_sensors, sensor_voltage, obd_compliance, o2_sensors_alt, aux_input_status,\
+    sensor_voltage_big, evap_pressure, current_centered, absolute_load, drop, max_maf, fuel_type, abs_evap_pressure,\
+    evap_pressure_alt, inject_timing, fuel_rate, dtc, monitor, raw_string, elm_voltage
+
+from .OBDCommand import OBDCommand
+from .protocols import ECU
+
 
 logger = logging.getLogger(__name__)
 
 
-
 '''
-Define command tables
+    Define command tables
 '''
 
 # NOTE: the NAME field will be used as the dict key for that sensor
@@ -299,12 +303,11 @@ __misc__ = [
 ]
 
 
-
-'''
-Assemble the command tables by mode, and allow access by name
-'''
-
 class Commands():
+    '''
+        Assemble the command tables by mode, and allow access by name
+    '''
+
     def __init__(self):
 
         # allow commands to be accessed by mode and PID
@@ -330,7 +333,6 @@ class Commands():
         for c in __misc__:
             self.__dict__[c.name] = c
 
-
     def __getitem__(self, key):
         """
             commands can be accessed by name, or by mode/pid
@@ -347,16 +349,13 @@ class Commands():
         else:
             logger.warning("OBD commands can only be retrieved by PID value or dict name")
 
-
     def __len__(self):
         """ returns the number of commands supported by python-OBD """
         return sum([len(mode) for mode in self.modes])
 
-
     def __contains__(self, name):
         """ calls has_name(s) """
         return self.has_name(name)
-
 
     def base_commands(self):
         """
@@ -373,25 +372,21 @@ class Commands():
             self.ELM_VOLTAGE,
         ]
 
-
     def pid_getters(self):
         """ returns a list of PID GET commands """
         getters = []
         for mode in self.modes:
-            getters += [ cmd for cmd in mode if (cmd and cmd.decode == pid) ]
+            getters += [cmd for cmd in mode if (cmd and cmd.decode == pid)]
         return getters
-
 
     def has_command(self, c):
         """ checks for existance of a command by OBDCommand object """
         return c in self.__dict__.values()
 
-
     def has_name(self, name):
         """ checks for existance of a command by name """
         # isupper() rejects all the normal properties
         return name.isupper() and name in self.__dict__
-
 
     def has_pid(self, mode, pid):
         """ checks for existance of a command by int mode and int pid """
